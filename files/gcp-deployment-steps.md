@@ -21,7 +21,7 @@ mvn clean compile package
 ```
 * build docker image
 ```
-docker build . -t gcr.io/gcp-practice-project-307011/spanner-crud
+docker build . -t gcr.io/<project-id>/spanner-crud
 ```
 * check docker images
 ```
@@ -29,15 +29,15 @@ docker images
 ```
 * push docker image to GCR - Google container registry
 ```
-docker push gcr.io/gcp-practice-project-307011/spanner-crud:latest
+docker push gcr.io/<project-id>/spanner-crud:latest
 ```
 * Create kubernetes cluster
 ```
-gcloud container clusters create "cluster-1" --scopes "https://www.googleapis.com/auth/cloud-platform" --num-nodes "1" --zone "us-central1-b" --project "gcp-practice-project-307011"
+gcloud container clusters create "cluster-1" --scopes "https://www.googleapis.com/auth/cloud-platform" --num-nodes "1" --zone "us-central1-b" --project "<project-id>"
 ```
 * Deploy
 ```
-kubectl create deployment spanner-crud --image=gcr.io/gcp-practice-project-307011/spanner-crud:latest
+kubectl create deployment spanner-crud --image=gcr.io/<project-id>/spanner-crud:latest
 ```
 * To view the deployment that you created, simply run the following command
 ```
@@ -57,11 +57,11 @@ kubectl get services
 ```
 * Following command to delete cluster
 ```
-gcloud container clusters delete cluster-1 --zone=us-central1-b --project "gcp-practice-project-307011"
+gcloud container clusters delete cluster-1 --zone=us-central1-b --project "<project-id>"
 ```
 * Delete the image from GCR
 ```
-gcloud -q container images delete gcr.io/gcp-practice-project-307011/spanner-crud:latest
+gcloud -q container images delete gcr.io/<project-id>/spanner-crud:latest
 ```
 * Delete the created VM
 ```

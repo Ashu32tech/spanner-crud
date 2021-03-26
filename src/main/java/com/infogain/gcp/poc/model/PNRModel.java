@@ -23,10 +23,9 @@ public class PNRModel {
         return pnrEntity;
     }
 
-    public PNREntity updateEntity(PNREntity pnrEntity){
+    public void updateEntity(PNREntity pnrEntity){
         pnrEntity.setMobileNumber(mobileNumber);
         pnrEntity.setRemark(remark);
-        return pnrEntity;
     }
 
 }

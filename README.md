@@ -10,10 +10,19 @@ mvn archetype:generate -DgroupId=com.infogain.gcp.poc -DartifactId=spanner-crud 
 ```
 CREATE TABLE pnr (
     pnr_id STRING(MAX),
-    lastUpdateTimestamp TIMESTAMP NOT NULL OPTIONS (allow_commit_timestamp=true),
     mobileNumber STRING(MAX),
     remark STRING(MAX),
+    lastUpdateTimestamp TIMESTAMP NOT NULL OPTIONS (allow_commit_timestamp=true)
 ) PRIMARY KEY (pnr_id);
+```
+
+* pnr_out_box table
+```
+create table pnr_out_box(
+    pnr_id string(max),
+    is_processed bool,
+    retry_count int64
+) primary key(pnr_id);
 ```
 
 * poller commit timestamp

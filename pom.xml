@@ -72,6 +72,17 @@
             <version>1.9.4</version>
         </dependency>
 
+        <!--<dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-webflux</artifactId>
+            &lt;!&ndash;<version>5.3.5</version>&ndash;&gt;
+        </dependency>-->
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-webflux</artifactId>
+        </dependency>
+
     </dependencies>
 
     <build>

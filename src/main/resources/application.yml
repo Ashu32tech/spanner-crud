@@ -35,6 +35,9 @@ spring:
 #  jpa:
 #    show-sql: true
 
+app:
+  publish.base.url: http://localhost:8081
+  publish.end.point: /api/v1/publish
 ---
 spring.profiles: dev
 

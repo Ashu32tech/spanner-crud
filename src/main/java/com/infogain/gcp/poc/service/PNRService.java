@@ -1,32 +1,41 @@
 package com.infogain.gcp.poc.service;
 
+import com.infogain.gcp.poc.component.RestClientUtil;
 import com.infogain.gcp.poc.entity.PNREntity;
 import com.infogain.gcp.poc.entity.PNROutBoxEntity;
 import com.infogain.gcp.poc.model.PNRModel;
 import com.infogain.gcp.poc.repository.PNROutBoxRepository;
 import com.infogain.gcp.poc.repository.PNRRepository;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.IterableUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Mono;
 
-import java.util.Collections;
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Slf4j
 @Service
 public class PNRService {
 
+    @Value("${app.publish.end.point}")
+    private String publishEndPoint;
+
+    @Value("${app.publish.base.url}")
+    private String baseUrl;
+
     @Autowired
     private PNRRepository pnrRepository;
 
     @Autowired
     private PNROutBoxRepository pnrOutBoxRepository;
+
+    @Autowired
+    private RestClientUtil restClientUtil;
 
     private PNREntity savePNREntity(PNREntity pnrEntity){
         // TODO validae for null pnrEntity
@@ -36,6 +45,14 @@ public class PNRService {
     private PNROutBoxEntity savePNROutBoxEntity(PNROutBoxEntity pnrOutBoxEntity){
         // TODO validate for null PNROutBoxEntity
         return pnrOutBoxRepository.save(pnrOutBoxEntity);
+    }
+
+    private void publishRecordChanges(PNRModel resultPNRModel) {
+        WebClient webClient = WebClient.create(baseUrl);
+        log.info("Calling publish API");
+        Mono<String> resultMono = webClient.post().uri(publishEndPoint).body(Mono.just(resultPNRModel), PNRModel.class).retrieve().bodyToMono(String.class);
+        resultMono.subscribe(System.out::println);
+        log.info("Called publish API");
     }
 
     @SuppressWarnings("all")
@@ -57,8 +74,9 @@ public class PNRService {
         log.info("Saved PNROutBoxEntity={}", persistedPNROutBoxEntity);
 
         PNRModel resultPNRModel = persistedPNREntity.buildModel();
+        // restClientUtil.callPostAPI(resultPNRModel, publishEndPoint);
 
-        // TODO Make async call to pub-sub-publisher
+        publishRecordChanges(resultPNRModel);
 
         return resultPNRModel;
     }
@@ -86,6 +104,7 @@ public class PNRService {
         PNRModel resultPNRModel = persistedPNREntity.buildModel();
 
         // TODO Make async call to pub-sub-publisher
+        publishRecordChanges(resultPNRModel);
 
         return resultPNRModel;
     }

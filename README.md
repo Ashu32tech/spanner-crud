@@ -25,7 +25,7 @@ create table pnr_out_box(
 ) primary key(pnr_id);
 ```
 
-* poller commit timestamp
+* poller commit timestamp - not needed
 ```
 CREATE TABLE POLLER_COMMIT_TIMESTAMPS (
     last_commit_timestamp TIMESTAMP

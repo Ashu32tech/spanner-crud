@@ -38,14 +38,11 @@ public class PNRService {
         return pnrOutBoxRepository.save(pnrOutBoxEntity);
     }
 
-
-
     @SuppressWarnings("all")
     @Transactional
     public PNRModel savePNRModel(PNRModel pnrModel){
         // TODO validate for null pnrModel
 
-        String pnrId = pnrModel.getPnrId();
         PNREntity pnrEntity = pnrModel.buildEntity();
 
         // save PNREntity

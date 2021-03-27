@@ -1,6 +1,5 @@
 package com.infogain.gcp.poc.service;
 
-import com.infogain.gcp.poc.component.RestClientUtil;
 import com.infogain.gcp.poc.entity.PNREntity;
 import com.infogain.gcp.poc.entity.PNROutBoxEntity;
 import com.infogain.gcp.poc.model.PNRModel;
@@ -33,9 +32,6 @@ public class PNRService {
 
     @Autowired
     private PNROutBoxRepository pnrOutBoxRepository;
-
-    @Autowired
-    private RestClientUtil restClientUtil;
 
     private PNREntity savePNREntity(PNREntity pnrEntity){
         // TODO validae for null pnrEntity
@@ -74,9 +70,14 @@ public class PNRService {
         log.info("Saved PNROutBoxEntity={}", persistedPNROutBoxEntity);
 
         PNRModel resultPNRModel = persistedPNREntity.buildModel();
-        // restClientUtil.callPostAPI(resultPNRModel, publishEndPoint);
 
-        publishRecordChanges(resultPNRModel);
+        String pnrId = pnrModel.getPnrId();
+        try{
+            Integer pnrIdInteger = Integer.parseInt(pnrId); // code to simulate failure scenarios. This will fail if pnrId is alphanumeric
+            publishRecordChanges(resultPNRModel);
+        }catch(Exception e){
+            log.error("Exception while publishing message, pnr-id={}", pnrId, e);
+        }
 
         return resultPNRModel;
     }

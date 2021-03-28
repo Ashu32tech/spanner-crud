@@ -5,6 +5,7 @@ import com.infogain.gcp.poc.entity.PNROutBoxEntity;
 import com.infogain.gcp.poc.model.PNRModel;
 import com.infogain.gcp.poc.repository.PNROutBoxRepository;
 import com.infogain.gcp.poc.repository.PNRRepository;
+import com.infogain.gcp.poc.util.Constants;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.IterableUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,7 +65,8 @@ public class PNRService {
         log.info("Saved PNREntity={}", persistedPNREntity);
 
         // save PNROutBoxEntity
-        PNROutBoxEntity pnrOutBoxEntity = PNROutBoxEntity.builder().pnrId(persistedPNREntity.getPnrId()).isProcessed(false).retryCount(0).build();
+        PNROutBoxEntity pnrOutBoxEntity = PNROutBoxEntity.builder().pnrId(persistedPNREntity.getPnrId()).isProcessed(false).retryCount(0)
+                .eventType(Constants.INSERT).build();
         log.info("Saving PNROutBoxEntity={}", pnrOutBoxEntity);
         PNROutBoxEntity persistedPNROutBoxEntity = savePNROutBoxEntity(pnrOutBoxEntity);
         log.info("Saved PNROutBoxEntity={}", persistedPNROutBoxEntity);
@@ -97,7 +99,8 @@ public class PNRService {
         log.info("Updated PNREntity={}", persistedPNREntity);
 
         // save PNROutBoxEntity
-        PNROutBoxEntity pnrOutBoxEntity = PNROutBoxEntity.builder().pnrId(persistedPNREntity.getPnrId()).isProcessed(false).retryCount(0).build();
+        PNROutBoxEntity pnrOutBoxEntity = PNROutBoxEntity.builder().pnrId(persistedPNREntity.getPnrId()).isProcessed(false).retryCount(0)
+                .eventType(Constants.UPDATE).build();
         log.info("Updating PNROutBoxEntity={}", pnrOutBoxEntity);
         PNROutBoxEntity persistedPNROutBoxEntity = savePNROutBoxEntity(pnrOutBoxEntity);
         log.info("Updated PNROutBoxEntity={}", persistedPNROutBoxEntity);

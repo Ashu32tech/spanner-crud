@@ -25,6 +25,7 @@ logging:
 
 # gcp properties
 spring:
+  profiles.active: dev
   cloud:
     gcp:
       project-id: gcp-practice-project-307011
@@ -35,14 +36,17 @@ spring:
 #  jpa:
 #    show-sql: true
 
+---
+spring.profiles: dev
+
 app:
   publish.base.url: http://localhost:8081
   publish.end.point: /api/v1/publish
 ---
-spring.profiles: dev
-
----
 spring.profiles: test
 
+app:
+  publish.base.url: http://35.239.73.98:8080
+  publish.end.point: /api/v1/publish
 ---
 spring.profiles: prod

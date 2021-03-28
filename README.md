@@ -21,7 +21,9 @@ CREATE TABLE pnr (
 create table pnr_out_box(
     pnr_id string(max),
     is_processed bool,
-    retry_count int64
+    retry_count int64,
+    event_type string(max),
+    processed_by string(max)
 ) primary key(pnr_id);
 ```
 

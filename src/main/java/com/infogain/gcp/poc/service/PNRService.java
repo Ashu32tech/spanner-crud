@@ -16,6 +16,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -44,10 +45,10 @@ public class PNRService {
         return pnrOutBoxRepository.save(pnrOutBoxEntity);
     }
 
-    private void publishRecordChanges(PNRModel resultPNRModel) {
+    private void publishRecordChanges(PNRModel pnrModel) {
         WebClient webClient = WebClient.create(baseUrl);
         log.info("Calling publish API");
-        Mono<String> resultMono = webClient.post().uri(publishEndPoint).body(Mono.just(resultPNRModel), PNRModel.class).retrieve().bodyToMono(String.class);
+        Mono<String> resultMono = webClient.post().uri(publishEndPoint).body(Mono.just(pnrModel), PNRModel.class).retrieve().bodyToMono(String.class);
         resultMono.subscribe(System.out::println);
         log.info("Called publish API");
     }
@@ -65,13 +66,15 @@ public class PNRService {
         log.info("Saved PNREntity={}", persistedPNREntity);
 
         // save PNROutBoxEntity
-        PNROutBoxEntity pnrOutBoxEntity = PNROutBoxEntity.builder().pnrId(persistedPNREntity.getPnrId()).isProcessed(false).retryCount(0)
+        String pnrOutBoxEntityId = UUID.randomUUID().toString();
+        PNROutBoxEntity pnrOutBoxEntity = PNROutBoxEntity.builder().id(pnrOutBoxEntityId).pnrId(persistedPNREntity.getPnrId()).isProcessed(false).retryCount(0)
                 .eventType(Constants.INSERT).build();
         log.info("Saving PNROutBoxEntity={}", pnrOutBoxEntity);
         PNROutBoxEntity persistedPNROutBoxEntity = savePNROutBoxEntity(pnrOutBoxEntity);
         log.info("Saved PNROutBoxEntity={}", persistedPNROutBoxEntity);
 
         PNRModel resultPNRModel = persistedPNREntity.buildModel();
+        resultPNRModel.setPnrOutBoxId(pnrOutBoxEntityId);
 
         String pnrId = pnrModel.getPnrId();
         try{
@@ -99,13 +102,15 @@ public class PNRService {
         log.info("Updated PNREntity={}", persistedPNREntity);
 
         // save PNROutBoxEntity
-        PNROutBoxEntity pnrOutBoxEntity = PNROutBoxEntity.builder().pnrId(persistedPNREntity.getPnrId()).isProcessed(false).retryCount(0)
+        String pnrOutBoxEntityId = UUID.randomUUID().toString();
+        PNROutBoxEntity pnrOutBoxEntity = PNROutBoxEntity.builder().id(pnrOutBoxEntityId).pnrId(persistedPNREntity.getPnrId()).isProcessed(false).retryCount(0)
                 .eventType(Constants.UPDATE).build();
         log.info("Updating PNROutBoxEntity={}", pnrOutBoxEntity);
         PNROutBoxEntity persistedPNROutBoxEntity = savePNROutBoxEntity(pnrOutBoxEntity);
         log.info("Updated PNROutBoxEntity={}", persistedPNROutBoxEntity);
 
         PNRModel resultPNRModel = persistedPNREntity.buildModel();
+        resultPNRModel.setPnrOutBoxId(pnrOutBoxEntityId);
 
         // TODO Make async call to pub-sub-publisher
         publishRecordChanges(resultPNRModel);

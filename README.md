@@ -19,12 +19,13 @@ CREATE TABLE pnr (
 * pnr_out_box table
 ```
 create table pnr_out_box(
+    id string(max),
     pnr_id string(max),
     is_processed bool,
     retry_count int64,
     event_type string(max),
     processed_by string(max)
-) primary key(pnr_id);
+) primary key(id);
 ```
 
 * poller commit timestamp - not needed

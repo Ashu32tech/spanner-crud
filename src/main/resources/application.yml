@@ -46,7 +46,7 @@ app:
 spring.profiles: test
 
 app:
-  publish.base.url: http://35.239.73.98:8080
+  publish.base.url: http://35.225.207.54:8080
   publish.end.point: /api/v1/publish
 ---
 spring.profiles: prod

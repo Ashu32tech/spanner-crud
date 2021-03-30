@@ -25,7 +25,7 @@ logging:
 
 # gcp properties
 spring:
-  profiles.active: dev
+  profiles.active: test
   cloud:
     gcp:
       project-id: gcp-practice-project-307011

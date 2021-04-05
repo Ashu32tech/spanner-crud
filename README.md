@@ -24,7 +24,8 @@ create table pnr_out_box(
     is_processed bool,
     retry_count int64,
     event_type string(max),
-    processed_by string(max)
+    processed_by string(max),
+    payload string(max)
 ) primary key(id);
 ```
 

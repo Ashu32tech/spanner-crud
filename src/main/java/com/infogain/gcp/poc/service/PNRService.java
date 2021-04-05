@@ -1,5 +1,6 @@
 package com.infogain.gcp.poc.service;
 
+import com.infogain.gcp.poc.component.MessageConverter;
 import com.infogain.gcp.poc.entity.PNREntity;
 import com.infogain.gcp.poc.entity.PNROutBoxEntity;
 import com.infogain.gcp.poc.model.PNRModel;
@@ -34,6 +35,9 @@ public class PNRService {
 
     @Autowired
     private PNROutBoxRepository pnrOutBoxRepository;
+    
+    @Autowired
+    private MessageConverter messageConverter;
 
     private PNREntity savePNREntity(PNREntity pnrEntity){
         // TODO validae for null pnrEntity
@@ -67,9 +71,15 @@ public class PNRService {
 
         // save PNROutBoxEntity
         String pnrOutBoxEntityId = UUID.randomUUID().toString();
+        
+        String payload = messageConverter.convertToJsonString(pnrEntity);
+        
+        
         PNROutBoxEntity pnrOutBoxEntity = PNROutBoxEntity.builder().id(pnrOutBoxEntityId).pnrId(persistedPNREntity.getPnrId()).isProcessed(false).retryCount(0)
-                .eventType(Constants.INSERT).build();
+                .eventType(Constants.INSERT).payload(payload).build();
+       
         log.info("Saving PNROutBoxEntity={}", pnrOutBoxEntity);
+        
         PNROutBoxEntity persistedPNROutBoxEntity = savePNROutBoxEntity(pnrOutBoxEntity);
         log.info("Saved PNROutBoxEntity={}", persistedPNROutBoxEntity);
 

@@ -28,6 +28,9 @@ public class PNROutBoxEntity {
 
     @Column(name = "event_type")
     private String eventType;
+    
+    @Column(name="payload")
+    private String payload;
 
     @Column(name = "processed_by")
     private String processedBy;

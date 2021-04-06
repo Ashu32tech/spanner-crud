@@ -35,6 +35,13 @@ CREATE TABLE POLLER_COMMIT_TIMESTAMPS (
     last_commit_timestamp TIMESTAMP
 ) PRIMARY KEY (last_commit_timestamp);
 ```
+* message outbox confirmation - not needed
+```
+create table message_outbox_confirmation(
+    id string(max),
+	process_status bool
+) primary key(id);
+```
 
 # References
 * [https://codelabs.developers.google.com/codelabs/cloud-springboot-kubernetes#0](https://codelabs.developers.google.com/codelabs/cloud-springboot-kubernetes#0)
